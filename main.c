@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+a
+
 typedef struct LNode_ {
 	int data;
 	struct LNode* next;
