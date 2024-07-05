@@ -4,29 +4,62 @@
 
 #if 1 // 使用数组（线性结构）实现栈
 typedef struct {
+    int* base;
+    int* top;
+    int stacksize;
 } Stack;
 
 // 创建一个栈
 // 参数 max_size: 支持的最大长度
-Stack *StackCreate(int max_size);
+Stack* StackCreate(int max_size) {
+    Stack *s=malloc(sizeof(Stack));
+    s->base = malloc(sizeof(int)*max_size);
+    s->top = s->base;
+    s->stacksize = max_size;
+
+    return s;
+}
 
 // 删除 StackCreate 创建的栈
-void StackDestory(Stack *stack);
+void StackDestory(Stack* stack) {
+    if (StackEmpty(stack))
+        return 0;
+    stack->top--;
+}
 
 // 判断栈是否为空, 返回1表示空, 0表示不空 (int强制转换为bool, 0为false, 其他为true)
-int StackEmpty(Stack *stack);
+int StackEmpty(Stack* stack) {
+    if (stack->top == stack->base)
+        return 1;
+    return 0;
+}
 
 // 判断栈是否已满, 返回1表示满，0表示不满
-int StackFull(Stack *stack);
+int StackFull(Stack* stack) {
+    if (stack->top - stack->base == stack->stacksize)
+        return 1;
+    return 0;
+}
 
 // 向栈顶放入一个元素
-void StackPush(Stack *stack, int value);
+void StackPush(Stack* stack, int value) {
+    if (!StackFull(stack))
+        *stack->top = value;
+        stack->top++;
+}
 
 // 获取栈顶的元素（不取出）
-int StackTop(Stack *stack);
+int StackTop(Stack* stack) {
+    if (stack->top != stack->base)
+        return *(stack->top - 1);
+}
 
-// 从栈顶取出一个元素
-void StackPop(Stack *stack);
+// 从栈顶取出一个元素 用value返回其值
+void StackPop(Stack* stack,int* value) {
+    if (!StackEmpty(stack))
+        stack->top--;
+        value=stack->top;
+}
 
 #endif
 
