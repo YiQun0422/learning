@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <malloc.h>
 
-#if 1 // 使用数组（线性结构）实现栈
+#if 0 // 使用数组（线性结构）实现栈
 typedef struct {
     int* base;
     int* top;
@@ -65,7 +65,7 @@ void StackPop(Stack* stack,int* value) {
 #endif
 
 // 由于这里的定义和上面的重复了, 所以可以把上面的 #if 1 改为 0 , 这里的改为 1 就可以切换不同实现
-#if 0 // 使用链表（链式结构）实现栈
+#if 1 // 使用链表（链式结构）实现栈
 //  区别于顺序结构, 链式结构支持无限长度, 所以没有 max_size 也不需要 StackFull 函数
 
 typedef struct {
@@ -122,7 +122,7 @@ void StackPop(Stack* stack,int* value){
 
 #endif
 
-#if 1 // 使用数组（线性结构）实现队列
+#if 0 // 使用数组（线性结构）实现队列
 typedef struct {
 
 } Queue;
@@ -146,7 +146,7 @@ void QueuePopfront(Queue* queue);
 
 #endif
 
-#if 0 // 使用链表（链式结构）实现队列，和上面类似
+#if 1 // 使用链表（链式结构）实现队列 先进先出
 typedef struct
 {
     int data;
