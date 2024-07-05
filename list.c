@@ -1,6 +1,7 @@
 #include <stdlib.h>
-#include <stdbool.h>
 #include <stdio.h>
+#include <stdbool.h>
+#include <malloc.h>
 
 #if 1 // 使用数组（线性结构）实现栈
 typedef struct {
@@ -123,30 +124,29 @@ void StackPop(Stack* stack,int* value){
 
 #if 1 // 使用数组（线性结构）实现队列
 typedef struct {
+
 } Queue;
 
-Queue *QueueCreate(int max_size);
+Queue* QueueCreate(int max_size);
 
-void QueueDestory(Queue *queue);
+void QueueDestory(Queue* queue);
 
-int QueueEmpty(Queue *queue);
+int QueueEmpty(Queue* queue);
 
-int QueueFull(Queue *queue);
+int QueueFull(Queue* queue);
 
 // 把元素放入队列尾部
-void QueuePushback(Queue *queue, int value);
+void QueuePushback(Queue* queue, int value);
 
 // 获取队头元素
-int QueueFront(Queue *queue);
+int QueueFront(Queue* queue);
 
 // 移出队头元素
-void QueuePopfront(Queue *queue);
+void QueuePopfront(Queue* queue);
 
 #endif
 
 #if 0 // 使用链表（链式结构）实现队列，和上面类似
-#endif
-
 void check_int(int a, int b) {
     if (a != b) {
         printf("actual: %d, except: %d\n", a, b);
@@ -165,7 +165,7 @@ void test_stack() {
     // 一下代码仅为使用示例，测试代码自行编写
 
     // 创建一个空的 stack
-    Stack *s = StackCreate(3);
+    Stack* s = StackCreate(3);
 
     // 向 stack 中添加一个元素
     if (!StackFull(s)) {
@@ -205,7 +205,7 @@ void test_queue() {
     // 考虑到客观上存在双端队列，就是说可以同时从队头或队尾插入、删除
     // 所以函数命名为 QueuePopfront 而不是 QueuePop
 
-    Queue *q = QueueCreate(3);
+    Queue* q = QueueCreate(3);
 
     if (!QueueFull(q)) {
         QueuePushback(q, 1);
@@ -236,3 +236,5 @@ void test_queue() {
 
     printf("tests all passed\n");
 }
+
+#endif
