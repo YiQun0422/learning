@@ -65,15 +65,12 @@ void StackPop(Stack* stack,int* value) {
 #endif
 
 // 由于这里的定义和上面的重复了, 所以可以把上面的 #if 1 改为 0 , 这里的改为 1 就可以切换不同实现
-#if 1 // 使用链表（链式结构）实现栈
-//  区别于顺序结构, 链式结构支持无限长度, 所以没有 max_size 也不需要 StackFull 函数
-
+#if 1 // 使用链表（链式结构）实现栈 后进先出
 typedef struct {
     int data;
-    struct Stack* next; //和单链表一样
+    struct Stack* next; //和单链表一致
 } Stack;
 
-// 这里的参数没有意义，仅仅为了保证和上面的接口一致
 Stack* StackCreate() {
     Stack* s = malloc(sizeof(Stack));
     s = NULL;//第一个结点作为栈顶
@@ -81,27 +78,22 @@ Stack* StackCreate() {
     return s;
 }
 
-// 删除 StackCreate 创建的栈
-void StackDestory(Stack* stack) {
-    free(stack);
-}
-
-// 判断栈是否为空, 返回0表示空, 1表示不空
-int StackEmpty(Stack* stack) {
-    if (stack == NULL)
-        return 0;
-    return 1;
-}
-
-// 永远不会满，仅仅为了保证和上面的接口一致
-int StackFull(Stack* stack) { return 0; }
-
-// 向栈顶放入一个元素
+// 链栈的入栈
 void StackPush(Stack* stack, int value) {
     Stack* p = malloc(sizeof(Stack));
-    p->data = value;
+    p->data = value;  //生成新结点 将新结点数据域置为value
     p->next = stack;
-    stack = p;
+    stack = p;  //插入的元素在栈顶
+}
+
+// 从栈顶取出一个元素 用value返回其值
+void StackPop(Stack* stack,int* value){
+    if (stack == NULL)
+        return false;  //栈空
+    value = stack->data;  //将栈顶元素赋值给value
+    Stack* p = stack;  //用p临时保存栈顶空间
+    stack = stack->next; //修改栈顶指针后移
+    free(p);  //释放原栈顶元素空间
 }
 
 // 获取栈顶的元素（不取出）
@@ -109,15 +101,6 @@ int StackTop(Stack* stack)
 {
     if (stack != NULL)
         return stack->data;
-}
-
-// 从栈顶取出一个元素 用value返回其值
-void StackPop(Stack* stack,int* value){
-    if (stack == NULL)
-        return false;
-    value = stack->data;
-    Stack* p = stack;
-    free(p);
 }
 
 #endif
