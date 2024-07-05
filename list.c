@@ -147,94 +147,52 @@ void QueuePopfront(Queue* queue);
 #endif
 
 #if 0 // 使用链表（链式结构）实现队列，和上面类似
-void check_int(int a, int b) {
-    if (a != b) {
-        printf("actual: %d, except: %d\n", a, b);
-        abort(); // 终止程序
-    }
+typedef struct
+{
+    int data;
+    struct  QNode* next;
+}QNode;
+
+typedef struct
+{
+    QNode* front;  //队头指针
+    QNode* rear;   //队尾指针
+}Queue;
+
+Queue* QueueCreate() {
+    Queue* q = malloc(sizeof(Queue));
+    q->front = malloc(sizeof(QNode));//新生成的结点作为头节点
+    q->front->next = NULL;//带头结点,头结点指针域置空
+    q->rear = q->front;//队尾指向队指向新节点
 }
 
-void check(bool v) {
-    if (!v) {
-        printf("actual: false, except: true\n");
-        abort(); // 终止程序
-    }
+// 链队的入队
+void QueuePush(Queue* queue, int value) {
+    QNode* p = malloc(sizeof(QNode));
+    p->data = value;  //为入队元素分配结点空间 数据域置为value 用指针p指向
+    p->next = NULL;  
+    queue->rear->next = p;  //将新结点插入队尾
+    queue->rear = p;  //修改队尾指针
 }
 
-void test_stack() {
-    // 一下代码仅为使用示例，测试代码自行编写
-
-    // 创建一个空的 stack
-    Stack* s = StackCreate(3);
-
-    // 向 stack 中添加一个元素
-    if (!StackFull(s)) {
-        StackPush(s, 1);
-    }
-
-    // 从 stack 末尾移出一个元素并打印这个元素
-    if (!StackEmpty(s)) {
-        printf("%d\n", StackTop(s));
-        StackPop(s);
-    }
-
-    // 使用 check 测试代码, 而不是打印出来靠眼睛测试
-    check(StackEmpty(s));
-    check(!StackFull(s));
-
-    StackPush(s, 2);
-    check(!StackEmpty(s));
-    check(!StackFull(s));
-    check_int(StackTop(s), 2);
-
-    StackPop(s);
-    check(StackEmpty(s));
-    check(!StackFull(s));
-
-    StackPush(s, 2);
-    StackPush(s, 3);
-    StackPush(s, 4);
-    check(!StackEmpty(s));
-    check(StackFull(s));
-
-    printf("tests all passed\n");
+// 链队的出队 用value返回其值
+void QueuePop(Queue* queue, int* value){
+    if (queue->front == queue->rear)
+        return false; //队列空出错
+    QNode* p = queue->front->next;  //p指向队头元素
+    value = p->data;
+    queue->front->next = p->next;  //修改头节点指针域
+    if (queue->rear == p)
+        queue->rear = queue->front; //尾结点被删 指向头结点
+    free(p);  //释放队头元素空间
 }
 
-void test_queue() {
-    // 关于 queue 的函数命名
-    // 考虑到客观上存在双端队列，就是说可以同时从队头或队尾插入、删除
-    // 所以函数命名为 QueuePopfront 而不是 QueuePop
-
-    Queue* q = QueueCreate(3);
-
-    if (!QueueFull(q)) {
-        QueuePushback(q, 1);
-    }
-
-    if (!QueueEmpty(q)) {
-        printf("%d\n", QueueFront(q));
-        QueuePopfront(q);
-    }
-
-    check(QueueEmpty(q));
-    check(!QueueFull(q));
-
-    QueuePushback(q, 2);
-    check(!QueueEmpty(q));
-    check(!QueueFull(q));
-    check_int(QueueFront(q), 2);
-
-    QueuePopfront(q);
-    check(QueueEmpty(q));
-    check(!QueueFull(q));
-
-    QueuePushback(q, 2);
-    QueuePushback(q, 3);
-    QueuePushback(q, 4);
-    check(!QueueEmpty(q));
-    check(QueueFull(q));
-
-    printf("tests all passed\n");
+// 取队头元素
+int QueueTop(Queue* queue)
+{
+    QNode* p = queue->front->next;
+    if (queue->front != queue->rear)
+        return p->data;
 }
 
 #endif
