@@ -35,28 +35,56 @@ void StackPop(Stack *stack);
 //  区别于顺序结构, 链式结构支持无限长度, 所以没有 max_size 也不需要 StackFull 函数
 
 typedef struct {
+    int data;
+    struct Stack* next; //和单链表一样
 } Stack;
 
 // 这里的参数没有意义，仅仅为了保证和上面的接口一致
-Stack *StackCreate(int);
+Stack* StackCreate() {
+    Stack* s = malloc(sizeof(Stack));
+    s = NULL;//第一个结点作为栈顶
+
+    return s;
+}
 
 // 删除 StackCreate 创建的栈
-void StackDestory(Stack *stack);
+void StackDestory(Stack* stack) {
+    free(stack);
+}
 
 // 判断栈是否为空, 返回0表示空, 1表示不空
-int StackEmpty(Stack *stack);
+int StackEmpty(Stack* stack) {
+    if (stack == NULL)
+        return 0;
+    return 1;
+}
 
 // 永远不会满，仅仅为了保证和上面的接口一致
-int StackFull(Stack *stack) { return 0; }
+int StackFull(Stack* stack) { return 0; }
 
 // 向栈顶放入一个元素
-void StackPush(Stack *stack, int value);
+void StackPush(Stack* stack, int value) {
+    Stack* p = malloc(sizeof(Stack));
+    p->data = value;
+    p->next = stack;
+    stack = p;
+}
 
 // 获取栈顶的元素（不取出）
-int StackTop(Stack *stack);
+int StackTop(Stack* stack)
+{
+    if (stack != NULL)
+        return stack->data;
+}
 
-// 从栈顶取出一个元素
-void StackPop(Stack *stack);
+// 从栈顶取出一个元素 用value返回其值
+void StackPop(Stack* stack,int* value){
+    if (stack == NULL)
+        return false;
+    value = stack->data;
+    Stack* p = stack;
+    free(p);
+}
 
 #endif
 
