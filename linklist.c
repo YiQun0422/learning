@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+//定义链表结构体
 typedef struct LNode_ {
 	int data;
 	struct LNode* next;
@@ -24,6 +25,7 @@ LinkList array_from_LinkList(int* array, int array_length) {
 	return head;
 }
 
+//释放结构体空间
 void free_LinkList(LinkList list) {
 	while (list) {
 		LNode* p = list->next;
