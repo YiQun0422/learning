@@ -2,13 +2,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-a
-
 typedef struct LNode_ {
 	int data;
 	struct LNode* next;
-}LNode,*LinkList;
+}LNode, * LinkList;
 
+// 把数组转为链表(尾插法)
 LinkList array_from_LinkList(int* array, int array_length) {
 	LinkList head = malloc(sizeof(LNode));
 	head->next = NULL;
@@ -25,6 +24,15 @@ LinkList array_from_LinkList(int* array, int array_length) {
 	return head;
 }
 
+void free_LinkList(LinkList list) {
+	while (list) {
+		LNode* p = list->next;
+		free(list);
+		list = p;
+	}
+}
+
+// 返回链表长度
 int LinkList_get_length(LinkList L) {
 	int length = 0;
 	LNode* p = L->next;//带头结点 从第二个元素开始算
@@ -36,6 +44,7 @@ int LinkList_get_length(LinkList L) {
 	return length;
 }
 
+// 打印链表每个值
 void LinkList_print(LinkList L) {
 	LNode* p = L->next;//带头结点 从第二个元素开始算
 	for (int i = 0; i < LinkList_get_length(L); i++)
@@ -46,6 +55,41 @@ void LinkList_print(LinkList L) {
 	printf("\n");
 }
 
+// 交换两个链表每个的值
+void LinkList_swap(LinkList LA, LinkList LB) {
+	LNode* pa = LA->next;
+	LNode* pb = LB->next;
+	while (pa && pb)
+	{
+		int temp = pa->data;
+		pa->data = pb->data;
+		pb->data = temp;
+		pa = pa->next;
+		pb = pb->next;
+	}
+}
+
+//合并两个有序链表
+struct ListNode* mergeTwoLists(LinkList list1, LinkList list2) {
+	if (list1 == NULL)
+	{
+		return list2;
+	}
+	else if (list2 == NULL)
+	{
+		return list1;
+	}
+	else if (list1->data < list2->data)
+	{
+		list1->next = mergeTwoLists(list1->next, list2);
+		return list1;
+	}
+	else {
+		list2->next = mergeTwoLists(list1, list2->next);
+		return list2;
+	}
+}
+
 //已知两个链表A和B分别表示两个集合，其元素递增排列。请设计一个算法求出A与B的交集，并存放在A链表中
 LNode* FindSame_A(LNode* la, LNode* lb)
 {
@@ -53,7 +97,7 @@ LNode* FindSame_A(LNode* la, LNode* lb)
 	LNode* pa = la->next;
 	LNode* pb = lb->next;
 	while (pa)
-	{	
+	{
 		bool index = true;
 		while (pb)
 		{
@@ -65,8 +109,8 @@ LNode* FindSame_A(LNode* la, LNode* lb)
 			}
 			else
 				pb = lb->next;
-				index = true;
-				break;
+			index = true;
+			break;
 		}
 		if (index)
 		{
@@ -137,7 +181,7 @@ LNode* Delete(LNode* list, int mink, int maxk)
 //设计一个算法删除线性表中所有值为 item的数据元素
 int* Delete_item(int* array, int item)
 {
-	int index = 3;
+	int index = item;
 	int sum = 0;
 	for (int i = 0; i < 8; i++)
 	{
@@ -147,22 +191,31 @@ int* Delete_item(int* array, int item)
 			sum += 1;
 		}
 	}
-	return array[8-sum];
+	return array[8 - sum];
 }
 
 int main()
 {
-	int arrA[5] = { 0,1,2,5,12};
-	int arrB[5] = { 0,1,3,5,12 };
+	int arrA[5] = { 1,3,3,5,9 };
+	int arrB[5] = { 0,1,5,9,11 };
 	int arrC[8] = { 1,2,2,3,3,4,5,7 };
+
 	LinkList la = array_from_LinkList(arrA, 5);
 	LinkList lb = array_from_LinkList(arrB, 5);
-	printf("LinkList la is: ");
+
+	printf("LinkList LA length is: %d\n", LinkList_get_length(la));
 	LinkList_print(la);
-	printf("LinkList lb is: ");
+	printf("LinkList LB length is: %d\n", LinkList_get_length(lb));
 	LinkList_print(lb);
-	printf("\n");
-	
+
+	printf("\nLinkList swap: \n\n");
+	LinkList_swap(la, lb);
+
+	printf("LinkList LA length is: %d\n", LinkList_get_length(la));
+	LinkList_print(la);
+	printf("LinkList LB length is: %d\n", LinkList_get_length(lb));
+	LinkList_print(lb);
+
 	printf("交集元素la is: ");
 	FindSame_A(la, lb);
 	LinkList_print(la);
@@ -195,6 +248,9 @@ int main()
 		printf("%d ", arrC[i]);
 	}
 	printf("\n");
+
+	free_LinkList(la);
+	free_LinkList(lb);
 
 	return 0;
 }
