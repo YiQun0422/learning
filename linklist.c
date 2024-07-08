@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-//定义链表结构体
+// 定义链表结构体
 typedef struct LNode_ {
 	int data;
 	struct LNode* next;
@@ -12,7 +12,7 @@ typedef struct LNode_ {
 LinkList array_from_LinkList(int* array, int array_length) {
 	LinkList head = malloc(sizeof(LNode));
 	head->next = NULL;
-	LNode* p = head;//尾指针指向头结点(带头结点的链表)
+	LNode* p = head; // 尾指针指向头结点(带头结点的链表)
 	for (int i = 0; i < array_length; i++)
 	{
 		LNode* node = malloc(sizeof(LNode));
@@ -25,7 +25,7 @@ LinkList array_from_LinkList(int* array, int array_length) {
 	return head;
 }
 
-//释放结构体空间
+// 释放结构体空间
 void free_LinkList(LinkList list) {
 	while (list) {
 		LNode* p = list->next;
@@ -37,7 +37,7 @@ void free_LinkList(LinkList list) {
 // 返回链表长度
 int LinkList_get_length(LinkList L) {
 	int length = 0;
-	LNode* p = L->next;//带头结点 从第二个元素开始算
+	LNode* p = L->next; // 带头结点 从第二个元素开始算
 	while (p)
 	{
 		p = p->next;
@@ -48,7 +48,7 @@ int LinkList_get_length(LinkList L) {
 
 // 打印链表每个值
 void LinkList_print(LinkList L) {
-	LNode* p = L->next;//带头结点 从第二个元素开始算
+	LNode* p = L->next; // 带头结点 从第二个元素开始算
 	for (int i = 0; i < LinkList_get_length(L); i++)
 	{
 		printf("%d ", p->data);
@@ -71,7 +71,7 @@ void LinkList_swap(LinkList LA, LinkList LB) {
 	}
 }
 
-//合并两个有序链表
+// 合并两个有序链表
 struct ListNode* mergeTwoLists(LinkList list1, LinkList list2) {
 	if (list1 == NULL)
 	{
@@ -92,7 +92,7 @@ struct ListNode* mergeTwoLists(LinkList list1, LinkList list2) {
 	}
 }
 
-//已知两个链表A和B分别表示两个集合，其元素递增排列。请设计一个算法求出A与B的交集，并存放在A链表中
+// 已知两个链表A和B分别表示两个元素递增排列的集合 求出A与B的交集并存放在A链表中
 LNode* FindSame_A(LNode* la, LNode* lb)
 {
 	LNode* p = la;
@@ -129,7 +129,7 @@ LNode* FindSame_A(LNode* la, LNode* lb)
 	return p;
 }
 
-//设计一个算法，通过一趟遍历确定长度为 n的单链表中值最大的结点
+// 通过一趟遍历确定长度为 n的单链表中值最大的结点
 int BiggestNode(LNode* la)
 {
 	LNode* index = la->next;
@@ -145,7 +145,7 @@ int BiggestNode(LNode* la)
 	return index->data;
 }
 
-//设计一个算法，将链表中所有结点的链接方向“原地”逆转(头插法）
+// 将链表中所有结点的链接方向“原地”逆转(头插法）
 LNode* Reversal(LNode* list)
 {
 	LNode* p = list->next;
@@ -160,7 +160,7 @@ LNode* Reversal(LNode* list)
 	return list;
 }
 
-//设计一个算法，删除递增有序链表中值大于mink且小于maxk的所有元素
+// 删除递增有序链表中值大于mink且小于maxk的所有元素
 LNode* Delete(LNode* list, int mink, int maxk)
 {
 	LNode* pa = list->next;
@@ -180,27 +180,25 @@ LNode* Delete(LNode* list, int mink, int maxk)
 	return list;
 }
 
-//设计一个算法删除线性表中所有值为 item的数据元素
+// 删除线性表中所有值为 item的数据元素
 int* Delete_item(int* array, int item)
 {
-	int index = item;
 	int sum = 0;
 	for (int i = 0; i < 8; i++)
 	{
-		if (array[i] != index)
+		if (array[i] != item)
 		{
 			array[sum] = array[i];
 			sum += 1;
 		}
 	}
-	return array[8 - sum];
+	return array;
 }
 
 int main()
 {
 	int arrA[5] = { 1,3,3,5,9 };
 	int arrB[5] = { 0,1,5,9,11 };
-	int arrC[8] = { 1,2,2,3,3,4,5,7 };
 
 	LinkList la = array_from_LinkList(arrA, 5);
 	LinkList lb = array_from_LinkList(arrB, 5);
@@ -236,8 +234,10 @@ int main()
 	LinkList_print(lb);
 	printf("\n");
 
+
+	int arrC[8] = { 1,2,2,3,3,4,5,7 };
 	printf("数组arrC中的元素为：");
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < sizeof(arrC) / sizeof(arrC[0]); i++)
 	{
 		printf("%d ", arrC[i]);
 	}
@@ -245,7 +245,7 @@ int main()
 
 	printf("删除arrC中所有值为3元素后数组为：");
 	Delete_item(arrC, 3);
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < (sizeof(arrC) / sizeof(arrC[0])-2); i++)
 	{
 		printf("%d ", arrC[i]);
 	}
