@@ -67,6 +67,12 @@ void DestoryStack(Stack* s)
 // 由于这里的定义和上面的重复了, 所以可以把上面的 #if 1 改为 0 , 这里的改为 1 就可以切换不同实现
 #if 1 // 使用链表（链式结构）实现栈 后进先出
 //  区别于顺序结构, 链式结构支持无限长度, 所以没有 MAXSIZE
+//定义链表结构体
+typedef struct {
+    int data;
+    struct LNode* next;
+}LNode;
+
 //定义栈结构体
 typedef struct {
     struct LNode* top;
