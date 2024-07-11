@@ -242,7 +242,7 @@ int main() {
     EXPECT_TRUE(PushQueue(q, valueb));  // 元素3入队
     EXPECT_EQ(TopQueue(q), 3);          // 判断是否入队成功
     EXPECT_TRUE(PushQueue(q, valuec));  // 元素4入队
-    EXPECT_EQ(QueueLength(q), 2);       // 判断队列是否为2
+    EXPECT_EQ(QueueLength(q), 2);       // 判断队列长度是否为2
     EXPECT_TRUE(PopQueue(q, &valuea));  // 元素3出队
     EXPECT_EQ(valuea, 3);               // 判断是否出队成功
     EXPECT_EQ(TopQueue(q),4);           // 取队列元素判断是否为4
