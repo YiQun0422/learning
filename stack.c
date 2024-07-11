@@ -5,7 +5,7 @@
 
 #define MAXSIZE 1000
 
-#if 1 // 顺序栈的表示  栈非空时 top永远指向栈顶元素的上一个位置
+#if 0 // 顺序栈的表示  栈非空时 top永远指向栈顶元素的上一个位置
 typedef struct {
     int* base;      // 栈底指针
     int* top;       // 栈顶指针
@@ -57,22 +57,22 @@ void DestoryStack(Stack* s)
 #endif
 
 // 由于这里的定义和上面的重复了, 所以可以把上面的 #if 1 改为 0 , 这里的改为 1 就可以切换不同实现
-#if 0 // 使用链表（链式结构）实现栈 后进先出
+#if 1 // 使用链表（链式结构）实现栈 后进先出
 //  区别于顺序结构, 链式结构支持无限长度, 所以没有 MAXSIZE
 typedef struct {
     int data;
-    struct Stack* next; //和单链表一致
+    struct Stack* next; // 和单链表一致
 } Stack;
 
-// 构造一个空栈 栈顶指针置空
-void InitStack(Stack* s) {
-    s = NULL;//第一个结点作为栈顶
-}
+// 构造一个空栈
+//void InitStack(Stack* s) {
+//    s->next = NULL; // 带头结点
+//}
 
 // 在栈顶插入元素value
 void PushStack(Stack* stack, int value) {
-    Stack* p = malloc(sizeof(Stack));
-    p->data = value;  //生成新结点 将新结点数据域置为value
+    Stack* p = malloc(sizeof(Stack)); // 生成新结点
+    p->data = value;                  // 将新结点数据域置为value
     p->next = stack;
     stack = p;  //插入的元素在栈顶
 }
@@ -89,16 +89,15 @@ bool PopStack(Stack* stack, int* value) {
 }
 
 // 返回s的栈顶元素 不修改栈顶指针
-int TopStack(Stack* stack,int* value)
+int TopStack(Stack* stack)
 {
     if (stack != NULL)
-        value = stack->data;
-    return value;
+        return stack->data;
 }
 
 #endif
 
-#if 0 // 队列的顺序表示 循环队列
+#if 1 // 队列的顺序表示 循环队列
 typedef struct {
     int* base; //存储空间的基地址
     int front; //头指针
@@ -129,16 +128,15 @@ bool PushQueue(Queue* queue, int value) {
 bool PopQueue(Queue* queue, int* value) {
     if (queue->front == queue->rear)
         return false; //队空
-    value = queue->base[queue->front]; //保存队头元素
+    *value = queue->base[queue->front]; //保存队头元素
     queue->front = (queue->front + 1) % MAXSIZE; //队头指针加1
     return true;
 }
 
 // 获取队头元素
-int TopQueue(Queue* queue, int* value) {
-    if (queue->front != queue->rear)  // 队列非空
-        value = queue->base[queue->front];
-    return value;  //返回队头元素的值
+int TopQueue(Queue* queue) {
+    if (queue->front != queue->rear)       // 队列非空
+        return  queue->base[queue->front]; // 返回队头元素的值
 }
 
 // 销毁创建的队列
@@ -210,10 +208,12 @@ int TopQueue(Queue* queue,int* value)
 #define EXPECT_TRUE(expect) EXPECT_EQ(expect, true)
 
 int main() {
+    // 测试栈
     Stack* s = malloc(sizeof(Stack));
-    InitStack(s);
     int value = 0, value1 = 1, value2 = 2;
 
+    // 测试顺序栈
+    /*InitStack(s);
     EXPECT_TRUE(PushStack(s, value1)); // 元素1入栈
     EXPECT_EQ(TopStack(s), 1);         // 判断是否入栈成功
     EXPECT_TRUE(PushStack(s, value2)); // 元素2入栈
@@ -222,7 +222,33 @@ int main() {
     EXPECT_EQ(value, 2);               // 判断是否出栈成功
     EXPECT_EQ(TopStack(s),1);          // 取栈顶元素判断是否为1
     DestoryStack(s);
-    free(s);
+    free(s);*/
+
+    // 测试链栈 带头结点
+    /*(PushStack(s, value1)); // 元素1入栈
+    EXPECT_EQ(TopStack(s), 1);         // 判断是否入栈成功
+    (PushStack(s, value2)); // 元素2入栈
+    EXPECT_EQ(TopStack(s), 2);         // 判断是否入栈成功
+    EXPECT_TRUE(PopStack(s, &value));  // 元素2出栈
+    EXPECT_EQ(value, 2);               // 判断是否出栈成功
+    EXPECT_EQ(TopStack(s),1);          // 取栈顶元素判断是否为1*/
+    
+    // 测试队列
+    Queue* q = malloc(sizeof(Queue));
+    int valuea = 0, valueb = 3, valuec = 4;
+
+    // 测试顺序队列
+    InitQueue(q);
+    
+    EXPECT_TRUE(PushQueue(q, valueb));  // 元素3入队
+    EXPECT_EQ(TopQueue(q), 3);          // 判断是否入队成功
+    EXPECT_TRUE(PushQueue(q, valuec));  // 元素4入队
+    EXPECT_EQ(QueueLength(q), 2);       // 判断队列是否为2
+    EXPECT_TRUE(PopQueue(q, &valuea));  // 元素3出队
+    EXPECT_EQ(valuea, 3);               // 判断是否出队成功
+    EXPECT_EQ(TopQueue(q),4);           // 取队列元素判断是否为4
+    DestoryQueue(q);
+    free(q);
 
     return 0;
 }
