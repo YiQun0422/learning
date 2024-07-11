@@ -5,6 +5,14 @@
 
 #define MAXSIZE 1000
 
+#define EXPECT_EQ(actual, expect)                                                                 \
+    do {                                                                                          \
+        if ((expect) != (actual))                                                                 \
+            printf("%s:%d: actual: %d, expect: %d\n", __FILE__, __LINE__, (actual), (expect));    \
+    } while(0)
+
+#define EXPECT_TRUE(expect) EXPECT_EQ(expect, true)
+
 #if 0 // 顺序栈的表示  栈非空时 top永远指向栈顶元素的上一个位置
 typedef struct {
     int* base;      // 栈底指针
@@ -97,7 +105,7 @@ int TopStack(Stack* stack)
 
 #endif
 
-#if 1 // 队列的顺序表示 循环队列
+#if 0 // 队列的顺序表示 循环队列
 typedef struct {
     int* base; //存储空间的基地址
     int front; //头指针
@@ -146,7 +154,7 @@ void DestoryQueue(Queue* q) {
 
 #endif
 
-#if 0 // 使用链表（链式结构）实现队列 先进先出
+#if 1 // 使用链表（链式结构）实现队列 先进先出
 typedef struct
 {
     int data;
@@ -199,14 +207,6 @@ int TopQueue(Queue* queue,int* value)
 
 #endif
 
-#define EXPECT_EQ(actual, expect)                                                                 \
-    do {                                                                                          \
-        if ((expect) != (actual))                                                                 \
-            printf("%s:%d: actual: %d, expect: %d\n", __FILE__, __LINE__, (actual), (expect));    \
-    } while(0)
-
-#define EXPECT_TRUE(expect) EXPECT_EQ(expect, true)
-
 int main() {
     // 测试栈
     Stack* s = malloc(sizeof(Stack));
@@ -238,8 +238,7 @@ int main() {
     int valuea = 0, valueb = 3, valuec = 4;
 
     // 测试顺序队列
-    InitQueue(q);
-    
+    /*InitQueue(q);
     EXPECT_TRUE(PushQueue(q, valueb));  // 元素3入队
     EXPECT_EQ(TopQueue(q), 3);          // 判断是否入队成功
     EXPECT_TRUE(PushQueue(q, valuec));  // 元素4入队
@@ -248,7 +247,9 @@ int main() {
     EXPECT_EQ(valuea, 3);               // 判断是否出队成功
     EXPECT_EQ(TopQueue(q),4);           // 取队列元素判断是否为4
     DestoryQueue(q);
-    free(q);
+    free(q);*/
+
+    // 测试链队列
 
     return 0;
 }
