@@ -28,13 +28,13 @@ void InitStack(Stack* s) {
     s->stacksize = MAXSIZE;
 }
 
-//插入元素value为新的栈顶元素
+// 插入元素value为新的栈顶元素
 bool PushStack(Stack* s, int value)
 {
     if (s->top - s->base == s->stacksize)
-        return false; // 栈满 指向数组元素下一个空间
+        return false;  // 栈满 指向数组元素下一个空间
     *(s->top) = value;
-    s->top++;  // 元素value压入栈顶 栈顶指针加1
+    s->top++;          // 元素value压入栈顶 栈顶指针加1
     return true;
 }
 
@@ -114,11 +114,11 @@ typedef struct {
 
 // 构造一个空队列q
 void InitQueue(Queue* q) {
-    q->base = malloc(sizeof(int) * MAXSIZE); //为队列分配数组空间
-    q->front = q->rear = 0; //队列为空
+    q->base = malloc(sizeof(int) * MAXSIZE); // 为队列分配数组空间
+    q->front = q->rear = 0;                  // 队列为空
 }
 
-//求队列长度
+// 求队列长度
 int QueueLength(Queue* queue) {
     return(queue->rear - queue->front + MAXSIZE) % MAXSIZE;
 }
@@ -126,18 +126,18 @@ int QueueLength(Queue* queue) {
 // 循环队列的入队
 bool PushQueue(Queue* queue, int value) {
     if ((queue->rear + 1) % MAXSIZE == queue->front)
-        return false; //队满
-    queue->base[queue->rear] = value;  //新元素插入队尾
-    queue->rear = (queue->rear + 1) % MAXSIZE;  //队尾指针加1
+        return false;                           // 队满
+    queue->base[queue->rear] = value;           // 新元素插入队尾
+    queue->rear = (queue->rear + 1) % MAXSIZE;  // 队尾指针加1
     return true;
 }
 
 // 移出队头元素 用value返回其值
 bool PopQueue(Queue* queue, int* value) {
     if (queue->front == queue->rear)
-        return false; //队空
-    *value = queue->base[queue->front]; //保存队头元素
-    queue->front = (queue->front + 1) % MAXSIZE; //队头指针加1
+        return false;                             // 队空
+    *value = queue->base[queue->front];           // 保存队头元素
+    queue->front = (queue->front + 1) % MAXSIZE;  // 队头指针加1
     return true;
 }
 
@@ -163,46 +163,45 @@ typedef struct
 
 typedef struct
 {
-    QNode* front;  //队头指针
-    QNode* rear;   //队尾指针
-}Queue; // 定义队列结构体
+    QNode* front;  // 队头指针
+    QNode* rear;   // 队尾指针
+}Queue;            // 定义队列结构体
 
 // 构造一个空队列q
 void InitQueue(Queue* q) {
     q->front = malloc(sizeof(QNode)); // 新生成的结点作为头节点
-    q->rear = q->front;//队尾指向队指向新节点
-    q->front->next = NULL;//带头结点,头结点指针域置空
+    q->rear = q->front;               // 队尾指向队指向新节点
+    q->front->next = NULL;            // 带头结点,头结点指针域置空
 }
 
 // 链队的入队
 void PushQueue(Queue* queue, int value) {
     QNode* p = malloc(sizeof(QNode));
-    p->data = value;  //为入队元素分配结点空间 数据域置为value 用指针p指向
+    p->data = value;        // 为入队元素分配结点空间 数据域置为value 用指针p指向
     p->next = NULL;
-    queue->rear->next = p;  //将新结点插入队尾
-    queue->rear = p;  //修改队尾指针
+    queue->rear->next = p;  // 将新结点插入队尾
+    queue->rear = p;        // 修改队尾指针
 }
 
 // 链队的出队 用value返回其值
 bool PopQueue(Queue* queue, int* value) {
     if (queue->front == queue->rear)
-        return false; //队列空出错
-    QNode* p = queue->front->next;  //p指向队头元素
-    value = p->data;
-    queue->front->next = p->next;  //修改头节点指针域
+        return false;                // 队列空出错
+    QNode* p = queue->front->next;   // p指向队头元素
+    *value = p->data;
+    queue->front->next = p->next;    // 修改头节点指针域
     if (queue->rear == p)
-        queue->rear = queue->front; //尾结点被删 指向头结点
-    free(p);  //释放队头元素空间
+        queue->rear = queue->front;  // 尾结点被删 指向头结点
+    free(p);                         // 释放队头元素空间
     return true;
 }
 
 // 取队头元素
-int TopQueue(Queue* queue,int* value)
+int TopQueue(Queue* queue)
 {
     QNode* p = queue->front->next;
     if (queue->front != queue->rear)
-        value = p->data;
-    return value;
+        return p->data;
 }
 
 #endif
@@ -250,6 +249,14 @@ int main() {
     free(q);*/
 
     // 测试链队列
+    /*nitQueue(q);
+    PushQueue(q, valueb);               // 元素3入队
+    EXPECT_EQ(TopQueue(q), 3);          // 判断是否入队成功
+    EXPECT_TRUE(PopQueue(q, &valuea));  // 元素3出队
+    EXPECT_EQ(valuea, 3);               // 判断是否出队成功
+    PushQueue(q, valuec);               // 元素4入队
+    EXPECT_EQ(TopQueue(q), 4);          // 判断是否入队成功
+    EXPECT_EQ(TopQueue(q), 4);          // 取队列元素判断是否为4*/
 
     return 0;
 }
