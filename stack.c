@@ -67,40 +67,41 @@ void DestoryStack(Stack* s)
 // 由于这里的定义和上面的重复了, 所以可以把上面的 #if 1 改为 0 , 这里的改为 1 就可以切换不同实现
 #if 1 // 使用链表（链式结构）实现栈 后进先出
 //  区别于顺序结构, 链式结构支持无限长度, 所以没有 MAXSIZE
+//定义栈结构体
 typedef struct {
-    int data;
-    struct Stack* next; // 和单链表一致
-} Stack;
+    struct LNode* top;
+}Stack;
 
 // 构造一个空栈
-//void InitStack(Stack* s) {
-//    s->next = NULL; // 带头结点
-//}
+void InitStack(Stack* s) {
+    s->top = NULL;
+}
 
 // 在栈顶插入元素value
 void PushStack(Stack* stack, int value) {
-    Stack* p = malloc(sizeof(Stack)); // 生成新结点
-    p->data = value;                  // 将新结点数据域置为value
-    p->next = stack;
-    stack = p;  //插入的元素在栈顶
+    LNode* p = malloc(sizeof(LNode));  // 生成新结点
+    p->data = value;                   // 将新结点数据域置为value
+    p->next = stack->top;              // 头插法插入p结点
+    stack->top = p;                    // 新生成的结点作为top
 }
 
 // 删除s的栈顶元素 用value返回其值
 bool PopStack(Stack* stack, int* value) {
-    if (stack == NULL)
-        return false;  //栈空
-    value = stack->data;  //将栈顶元素赋值给value
-    Stack* p = stack;  //用p临时保存栈顶空间
-    stack = stack->next; //修改栈顶指针后移
-    free(p);  //释放原栈顶元素空间
+    if (stack->top == NULL)
+        return false;       // 栈空
+    LNode* p = stack->top;  // p结点指向栈顶
+    *value = p->data;       // 栈顶的值赋给value
+    stack->top = p->next;   // 栈顶结点为p的下一个结点
+    free(p);                // 释放p结点空间
     return true;
 }
 
 // 返回s的栈顶元素 不修改栈顶指针
 int TopStack(Stack* stack)
 {
+    LNode* p = stack->top;
     if (stack != NULL)
-        return stack->data;
+        return p->data;
 }
 
 #endif
@@ -224,13 +225,14 @@ int main() {
     free(s);*/
 
     // 测试链栈 带头结点
-    /*(PushStack(s, value1)); // 元素1入栈
+    InitStack(s);
+    PushStack(s, value1);              // 元素1入栈
     EXPECT_EQ(TopStack(s), 1);         // 判断是否入栈成功
-    (PushStack(s, value2)); // 元素2入栈
+    PushStack(s, value2);              // 元素2入栈
     EXPECT_EQ(TopStack(s), 2);         // 判断是否入栈成功
     EXPECT_TRUE(PopStack(s, &value));  // 元素2出栈
     EXPECT_EQ(value, 2);               // 判断是否出栈成功
-    EXPECT_EQ(TopStack(s),1);          // 取栈顶元素判断是否为1*/
+    EXPECT_EQ(TopStack(s),1);          // 取栈顶元素判断是否为1
     
     // 测试队列
     Queue* q = malloc(sizeof(Queue));
