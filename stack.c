@@ -30,24 +30,23 @@ bool PushStack(Stack* s, int value)
     return true;
 }
 
-// 删除栈顶元素 用value返回其值 指针下移一位
+// 删除栈顶元素 用value返回其值
 bool PopStack(Stack* s, int* value)
 {
-    if (s->top = s->base)
+    if (s->top == s->base)
         return false;
     s->top -= 1;
-    value = *s->top;
+    *value = *s->top;
     // s->top <==> (*s).top
     // *s->top <==> *((*s).top)
     return true;
 }
 
 // 返回s的栈顶元素 不修改栈顶指针
-bool TopStack(Stack* s, int* value) {
+int TopStack(Stack* s) {
     if (s->top == s->base)
         return false;
-    value = *(s->top - 1);
-    return value;
+    return *(s->top - 1);
 }
 
 // 销毁创造的栈
@@ -149,7 +148,7 @@ void DestoryQueue(Queue* q) {
 
 #endif
 
-#if 1 // 使用链表（链式结构）实现队列 先进先出
+#if 0 // 使用链表（链式结构）实现队列 先进先出
 typedef struct
 {
     int data;
@@ -202,19 +201,26 @@ int TopQueue(Queue* queue,int* value)
 
 #endif
 
+#define EXPECT_EQ(actual, expect)                                                                 \
+    do {                                                                                          \
+        if ((expect) != (actual))                                                                 \
+            printf("%s:%d: actual: %d, expect: %d\n", __FILE__, __LINE__, (actual), (expect));    \
+    } while(0)
+
+#define EXPECT_TRUE(expect) EXPECT_EQ(expect, true)
+
 int main() {
     Stack* s = malloc(sizeof(Stack));
-    int value = 1;
-
-    // 使用线性结构实现栈 
     InitStack(s);
-    PushStack(s, value); // 在栈顶插入元素value
-    if (!PushStack(s, value)) {
-        printf("error: stack is full\n");
-        exit(1);
-    }
-    PopStack(s, &value); // 移除栈顶元素并返回
-    TopStack(s, &value); // 返回栈顶元素的值
+    int value = 0, value1 = 1, value2 = 2;
+
+    EXPECT_TRUE(PushStack(s, value1)); // 元素1入栈
+    EXPECT_EQ(TopStack(s), 1);         // 判断是否入栈成功
+    EXPECT_TRUE(PushStack(s, value2)); // 元素2入栈
+    EXPECT_EQ(TopStack(s), 2);         // 判断是否入栈成功
+    EXPECT_TRUE(PopStack(s, &value));  // 元素2出栈
+    EXPECT_EQ(value, 2);               // 判断是否出栈成功
+    EXPECT_EQ(TopStack(s),1);          // 取栈顶元素判断是否为1
     DestoryStack(s);
     free(s);
 
