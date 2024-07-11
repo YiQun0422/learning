@@ -6,7 +6,7 @@
 // 2.求满二叉树（输入：完全二叉树的层序遍历 1，2，3，4，5 输出：二叉树）一个
 #define MAXSIZE 1000
 
-//构造结点的结构体
+// 构造结点的结构体
 typedef struct BiTNode {
     int data;//数据域
 	struct BiTNode* lChild; // 左孩子指针
@@ -59,7 +59,7 @@ void InOrderTravserse(BiNode* T) {
 	}
 }
 
-//后序遍历
+// 后序遍历的递归算法 左右根
 void PostOrderTraverse(BiNode* T) {
 	if (T) {
 		PostOrderTraverse(T->lChild); // 遍历左孩子
@@ -86,17 +86,18 @@ int Depth(BiNode* T) {
 #endif
 
 #if 0 // 迭代算法
+// 先序遍历的迭代算法
+void PerOrderTravserse(BiNode* T) {
+
+}
+
+// 中序遍历的迭代算法 左根右
 void InOrderTravserse(BiNode* T) {
 
 }
 
-// 中序遍历的递归算法 左根右
-void InOrderTravserse(BiNode* T) {
-
-}
-
-// 后序遍历的递归算法 左右根
-void InOrderTravserse(BiNode* T) {
+// 后序遍历的迭代算法 左右根
+void PostOrderTraverse(BiNode* T) {
 
 }
 
