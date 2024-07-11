@@ -224,7 +224,7 @@ int main() {
     DestoryStack(s);
     free(s);*/
 
-    // 测试链栈 带头结点
+    // 测试链栈
     InitStack(s);
     PushStack(s, value1);              // 元素1入栈
     EXPECT_EQ(TopStack(s), 1);         // 判断是否入栈成功
