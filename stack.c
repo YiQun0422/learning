@@ -51,10 +51,11 @@ bool PopStack(Stack* s, int* value)
 }
 
 // 返回s的栈顶元素 不修改栈顶指针
-int TopStack(Stack* s) {
+bool TopStack(Stack* s, int* value) {
     if (s->top == s->base)
         return false;
-    return *(s->top - 1);
+    *value = *(s->top - 1);
+    return true;
 }
 
 // 销毁创造的栈
@@ -103,11 +104,14 @@ bool PopStack(Stack* stack, int* value) {
 }
 
 // 返回s的栈顶元素 不修改栈顶指针
-int TopStack(Stack* stack)
+bool TopStack(Stack* stack, int* value)
 {
     LNode* p = stack->top;
-    if (stack != NULL)
-        return p->data;
+    if (stack == NULL)
+        return false;
+    else
+        *value = p->data;
+        return true;
 }
 
 #endif
@@ -122,7 +126,8 @@ typedef struct {
 // 构造一个空队列q
 void InitQueue(Queue* q) {
     q->base = malloc(sizeof(int) * MAXSIZE); // 为队列分配数组空间
-    q->front = q->rear = 0;                  // 队列为空
+    q->front  = 0;
+    q->rear = q->front;                      // 队列为空
 }
 
 // 求队列长度
@@ -149,9 +154,12 @@ bool PopQueue(Queue* queue, int* value) {
 }
 
 // 获取队头元素
-int TopQueue(Queue* queue) {
-    if (queue->front != queue->rear)       // 队列非空
-        return  queue->base[queue->front]; // 返回队头元素的值
+bool TopQueue(Queue* queue, int* value) {
+    if (queue->front == queue->rear)        // 队列为空
+        return false;
+    else
+        *value = queue->base[queue->front]; // 返回队头元素的值
+        return true;
 }
 
 // 销毁创建的队列
@@ -204,11 +212,14 @@ bool PopQueue(Queue* queue, int* value) {
 }
 
 // 取队头元素
-int TopQueue(Queue* queue)
+bool TopQueue(Queue* queue, int* value)
 {
     QNode* p = queue->front->next;
-    if (queue->front != queue->rear)
-        return p->data;
+    if (queue->front == queue->rear)
+        return false;
+    else
+        *value = p->data;
+        return true;
 }
 
 #endif
@@ -217,54 +228,51 @@ int main() {
     // 测试栈
     Stack* s = malloc(sizeof(Stack));
     int value = 0, value1 = 1, value2 = 2;
+    int topstack = 0;
 
-    // 测试顺序栈
-    /*InitStack(s);
-    EXPECT_TRUE(PushStack(s, value1)); // 元素1入栈
-    EXPECT_EQ(TopStack(s), 1);         // 判断是否入栈成功
-    EXPECT_TRUE(PushStack(s, value2)); // 元素2入栈
-    EXPECT_EQ(TopStack(s), 2);         // 判断是否入栈成功
-    EXPECT_TRUE(PopStack(s, &value));  // 元素2出栈
-    EXPECT_EQ(value, 2);               // 判断是否出栈成功
-    EXPECT_EQ(TopStack(s),1);          // 取栈顶元素判断是否为1
-    DestoryStack(s);
-    free(s);*/
-
-    // 测试链栈
     InitStack(s);
     PushStack(s, value1);              // 元素1入栈
-    EXPECT_EQ(TopStack(s), 1);         // 判断是否入栈成功
+    TopStack(s, &topstack);
+    EXPECT_EQ(topstack, 1);            // 判断是否入栈成功
     PushStack(s, value2);              // 元素2入栈
-    EXPECT_EQ(TopStack(s), 2);         // 判断是否入栈成功
+    TopStack(s, &topstack);
+    EXPECT_EQ(topstack, 2);            // 判断是否入栈成功
     EXPECT_TRUE(PopStack(s, &value));  // 元素2出栈
     EXPECT_EQ(value, 2);               // 判断是否出栈成功
-    EXPECT_EQ(TopStack(s),1);          // 取栈顶元素判断是否为1
-    
+    TopStack(s, &topstack);
+    EXPECT_EQ(topstack, 1);            // 判断栈顶元素是否为1
+    //DestoryStack(s);
+    //free(s);
+
     // 测试队列
     Queue* q = malloc(sizeof(Queue));
     int valuea = 0, valueb = 3, valuec = 4;
+    int topqueue = 0;
 
     // 测试顺序队列
     /*InitQueue(q);
     EXPECT_TRUE(PushQueue(q, valueb));  // 元素3入队
-    EXPECT_EQ(TopQueue(q), 3);          // 判断是否入队成功
+    TopQueue(q, &topqueue);
+    EXPECT_EQ(topqueue, 3);             // 判断是否入队成功
     EXPECT_TRUE(PushQueue(q, valuec));  // 元素4入队
     EXPECT_EQ(QueueLength(q), 2);       // 判断队列长度是否为2
     EXPECT_TRUE(PopQueue(q, &valuea));  // 元素3出队
     EXPECT_EQ(valuea, 3);               // 判断是否出队成功
-    EXPECT_EQ(TopQueue(q),4);           // 取队列元素判断是否为4
+    TopQueue(q, &topqueue);
+    EXPECT_EQ(topqueue,4);              // 取队列元素判断是否为4
     DestoryQueue(q);
     free(q);*/
 
     // 测试链队列
-    /*nitQueue(q);
+    InitQueue(q);
     PushQueue(q, valueb);               // 元素3入队
-    EXPECT_EQ(TopQueue(q), 3);          // 判断是否入队成功
+    TopQueue(q, &topqueue);
+    EXPECT_EQ(topqueue, 3);             // 判断是否入队成功
     EXPECT_TRUE(PopQueue(q, &valuea));  // 元素3出队
     EXPECT_EQ(valuea, 3);               // 判断是否出队成功
     PushQueue(q, valuec);               // 元素4入队
-    EXPECT_EQ(TopQueue(q), 4);          // 判断是否入队成功
-    EXPECT_EQ(TopQueue(q), 4);          // 取队列元素判断是否为4*/
+    TopQueue(q, &topqueue);
+    EXPECT_EQ(topqueue, 4);             // 取队列元素判断是否为4
 
     return 0;
 }
