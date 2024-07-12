@@ -109,9 +109,8 @@ bool TopStack(Stack* stack, int* value)
     LNode* p = stack->top;
     if (stack == NULL)
         return false;
-    else
-        *value = p->data;
-        return true;
+    *value = p->data;
+    return true;
 }
 
 #endif
@@ -157,9 +156,8 @@ bool PopQueue(Queue* queue, int* value) {
 bool TopQueue(Queue* queue, int* value) {
     if (queue->front == queue->rear)        // 队列为空
         return false;
-    else
-        *value = queue->base[queue->front]; // 返回队头元素的值
-        return true;
+    *value = queue->base[queue->front]; // 返回队头元素的值
+    return true;
 }
 
 // 销毁创建的队列
@@ -217,9 +215,8 @@ bool TopQueue(Queue* queue, int* value)
     QNode* p = queue->front->next;
     if (queue->front == queue->rear)
         return false;
-    else
-        *value = p->data;
-        return true;
+    *value = p->data;
+    return true;
 }
 
 #endif
