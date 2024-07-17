@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-// 2.求满二叉树（输入：完全二叉树的层序遍历 1，2，3，4，5 输出：二叉树）一个
-
 // 构造结点的结构体
 typedef struct BiTNode {
     int data;               // 数据域
@@ -186,6 +184,7 @@ int Depth(BiNode* T) {
 	return 3;
 }
 
+// 求满二叉树（输入：完全二叉树的层序遍历 1，2，3，4，5 输出：二叉树）
 
 #endif
 
