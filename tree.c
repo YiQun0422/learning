@@ -125,13 +125,13 @@ void InOrderTravserse(BiNode* root) {
 		if (root)
 		{
 			*top = root;
-			top++; // 根节点入栈
+			top++; // 结点入栈
 			root = root->lChild; // 寻找是否有左孩子
 		}
 		else
 		{
 			root = *(top - 1);
-			top--;
+			top--; // 结点出栈
 			printf("%d ", root->data); // 打印结点值
 			root = root->rChild; // 寻找是否有右孩子
 		}
@@ -142,7 +142,29 @@ void InOrderTravserse(BiNode* root) {
 void PostOrderTraverse(BiNode* root) {
 	BiNode* stack[1000];  // 生成顺序栈
 	BiNode** top = stack; // 栈顶指针指向数组
+	BiNode* t = root;     // 指向根节点
+	BiNode* last = t;     // 指向t结点
 
+	while (stack != top || t) {
+		while (t)
+		{
+			*top = t;
+			top++; // 结点入栈
+			t = t->lChild; // 寻找到最左孩子
+		}
+		t = *(top - 1);
+		top--; // 结点出栈
+		if (!t->rChild || t->rChild == last) {
+			printf("%d ", t->data);
+			last = t;  // 记录当前访问过的节点
+			t = NULL;
+		}
+		else {
+			*top = t;
+			top++;           // 否则将当前节点重新入栈
+			t = t->rChild;   // 转而前往其右子树
+		}
+	}
 }
 
 // 层序遍历的迭代算法
@@ -156,13 +178,13 @@ void LevelOrder(BiNode* T) {
 	while (front!=rear) {  // 队列非空
 		BiNode* node = *front;
 		front++;
-		printf("%d ", node->data);
-		if (node->lChild)
+		printf("%d ", node->data); // 打印非空结点值
+		if (node->lChild) // 若存在左孩子则左孩子入队
 		{
 			*rear = node->lChild;
 			rear++;
 		}
-		if (node->rChild)
+		if (node->rChild)// 若存在右孩子则右孩子入队
 		{
 			*rear = node->rChild;
 			rear++;
@@ -179,28 +201,28 @@ int Depth(BiNode* T) {
 	int length = 0;
 	bool index = true;
 	*rear = T;
-	rear++;                // 根节点入队
+	rear++;                  // 根节点入队
 	while (front != rear) {  // 队列非空
 		BiNode* node = *front;
 		front++;
-		if (node->lChild)
+		if (node->lChild) // 若存在左孩子则左孩子入队
 		{
 			*rear = node->lChild;
 			rear++;
 			if (index)
 			{
-				length++;
+				length++; // 存在左孩子长度加1
 				index = false;
 			}
 		}
-		if (node->rChild)
+		if (node->rChild) // 若存在右孩子则右孩子入队
 		{
 			*rear = node->rChild;
 			rear++;
 			if (index)
 			{
 				length++;
-				index = false;
+				index = false; // 防止重复计算同一层左右孩子高度
 			}
 		}
 		index = true;
