@@ -11,27 +11,37 @@ typedef struct BiTNode {
 
 // 初始化树的函数 1 2 3 4 5 6 7
 void CreateBiTree(BiNode* T) {
-	T->data = 1;
+	T->data = 1; // 第一层
+
 	T->lChild = malloc(sizeof(BiNode));
-	T->rChild = malloc(sizeof(BiNode));
 	T->lChild->data = 2;
+	T->rChild = malloc(sizeof(BiNode));
+	T->rChild->data = 3; // 第二层
+
 	T->lChild->lChild = malloc(sizeof(BiNode));
-	T->lChild->rChild = malloc(sizeof(BiNode));
-	T->lChild->rChild->data = 5;
-	T->lChild->rChild->lChild = NULL;
-	T->lChild->rChild->rChild = NULL;
-	T->rChild->data = 3;
-	T->rChild->lChild = malloc(sizeof(BiNode));
-	T->rChild->lChild->data = 6;
-	T->rChild->lChild->lChild = NULL;
-	T->rChild->lChild->rChild = NULL;
-	T->rChild->rChild = malloc(sizeof(BiNode));
-	T->rChild->rChild->data = 7;
-	T->rChild->rChild->lChild = NULL;
-	T->rChild->rChild->rChild = NULL;
 	T->lChild->lChild->data = 4;
 	T->lChild->lChild->lChild = NULL;
 	T->lChild->lChild->rChild = NULL;
+	T->lChild->rChild = malloc(sizeof(BiNode));
+	T->lChild->rChild->data = 5;
+	//T->lChild->rChild->lChild = NULL;
+	T->lChild->rChild->rChild = NULL; // 第三层左子树
+
+	T->lChild->rChild->lChild = malloc(sizeof(BiNode));
+	T->lChild->rChild->lChild->data = 6;
+	T->lChild->rChild->lChild->lChild = NULL;
+	T->lChild->rChild->lChild->rChild = NULL;
+	
+	T->rChild->lChild = NULL;
+	//T->rChild->lChild = malloc(sizeof(BiNode));
+	//T->rChild->lChild->data = 6;
+	//T->rChild->lChild->lChild = NULL;
+	//T->rChild->lChild->rChild = NULL;
+	T->rChild->rChild = NULL;
+	//T->rChild->rChild = malloc(sizeof(BiNode));
+	//T->rChild->rChild->data = 7;
+	//T->rChild->rChild->lChild = NULL;
+	//T->rChild->rChild->rChild = NULL; // 第三层右子树
 }
 
 #if 0 // 递归算法
@@ -87,40 +97,43 @@ void PerOrderTravserse(BiNode* root) {
 	BiNode* stack[1000];  // 生成顺序栈
 	BiNode** top = stack; // 栈顶指针指向数组
 
-	*top = root; // push(root) 根节点入栈?
-	top++;
-	while (stack != top) { // 若栈非空?
-		BiNode* node = *(top - 1); // 取出栈顶元素
-		top--;
-		if(node!=NULL)
-			printf("%d ", node->data); // 打印结点值
-		else
-			continue;
-		*top = node->rChild; // 右孩子入栈
-		top++;
-		*top = node->lChild; // 左孩子入栈
-		top++;
+	*top = root;
+	top++; // 根节点入栈
+	while (stack != top) { // 栈非空
+		BiNode* node = *(top - 1);
+		top--; // 取出栈顶元素
+		printf("%d ", node->data); // 打印结点值
+		if (node->rChild)          // 右孩子入栈
+		{
+			*top = node->rChild;
+			top++;
+		}
+		if (node->lChild)          // 左孩子入栈
+		{
+			*top = node->lChild;
+			top++;
+		}
 	}
 }
 
 // 中序遍历的迭代算法 左根右
-void InOrderTravserse(BiNode* T) {
-	BiNode* stack[1000];
-	BiNode** top = stack;
-	BiNode* p = T;
+void InOrderTravserse(BiNode* root) {
+	BiNode* stack[1000];  // 生成顺序栈
+	BiNode** top = stack; // 栈顶指针指向数组
 
-	while (stack != top||p) {
-		if (p)
+	while (stack != top||root) { // 栈非空
+		if (root)
 		{
-			*top = p;
-			top++;
-			p = p->lChild;
+			*top = root;
+			top++; // 根节点入栈
+			root = root->lChild; // 寻找是否有左孩子
 		}
-		else {
-			BiNode* q = *(top - 1);
+		else
+		{
+			root = *(top - 1);
 			top--;
- 			printf("%d ", q->data);
-			p = q->rChild;
+			printf("%d ", root->data); // 打印结点值
+			root = root->rChild; // 寻找是否有右孩子
 		}
 	}
 }
@@ -160,28 +173,56 @@ void LevelOrder(BiNode* T) {
 	BiNode* queue[1000];    // 创建队列
 	BiNode** front = queue; // 创建对头指针
 	BiNode** rear = front;  // 创建队尾指针
-	BiNode* t = T;          // 使t指向T
 
-	*rear = t;              
+	*rear = T;              
 	rear++;                // 根节点入队
-	while (front!=rear||t) {        // 队列非空
+	while (front!=rear) {  // 队列非空
 		BiNode* node = *front;
 		front++;
 		printf("%d ", node->data);
-		
-
 		if (node->lChild)
+		{
 			*rear = node->lChild;
 			rear++;
+		}
 		if (node->rChild)
+		{
 			*rear = node->rChild;
 			rear++;
-}
+		}
+	}
 }
 
 // 计算二叉树的深度
 int Depth(BiNode* T) {
-	return 3;
+	BiNode* queue[1000];    // 创建队列
+	BiNode** front = queue; // 创建对头指针
+	BiNode** rear = front;  // 创建队尾指针
+
+	int i = 0;
+	int j = 0;
+	
+	*rear = T;
+	rear++;                // 根节点入队
+	while (front != rear) {  // 队列非空
+		BiNode* node = *front;
+		front++;
+		if (node->lChild)
+		{
+			*rear = node->lChild;
+			rear++;
+			i++;
+		}
+		if (node->rChild)
+		{
+			*rear = node->rChild;
+			rear++;
+			j++;
+		}
+	}
+	if (i > j)
+		return i ;
+	return j ;
 }
 
 // 求满二叉树（输入：完全二叉树的层序遍历 1，2，3，4，5 输出：二叉树）
@@ -200,9 +241,9 @@ int main() {
 	InOrderTravserse(tree);
 	printf("\n");
 
-	printf("后序遍历二叉树为: ");
+	/*printf("后序遍历二叉树为: ");
 	PostOrderTraverse(tree);
-	printf("\n");
+	printf("\n");*/
 
 	printf("层序遍历二叉树为: ");
 	LevelOrder(tree);
