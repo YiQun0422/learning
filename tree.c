@@ -18,30 +18,35 @@ void CreateBiTree(BiNode* T) {
 	T->rChild = malloc(sizeof(BiNode));
 	T->rChild->data = 3; // 第二层
 
+	/*T->lChild->lChild = NULL;
+	T->lChild->rChild = NULL;
+	T->rChild->lChild = NULL;
+	T->rChild->rChild = NULL;*/
+
 	T->lChild->lChild = malloc(sizeof(BiNode));
 	T->lChild->lChild->data = 4;
 	T->lChild->lChild->lChild = NULL;
 	T->lChild->lChild->rChild = NULL;
 	T->lChild->rChild = malloc(sizeof(BiNode));
 	T->lChild->rChild->data = 5;
-	//T->lChild->rChild->lChild = NULL;
+	T->lChild->rChild->lChild = NULL;
 	T->lChild->rChild->rChild = NULL; // 第三层左子树
 
-	T->lChild->rChild->lChild = malloc(sizeof(BiNode));
+	/*T->lChild->rChild->lChild = malloc(sizeof(BiNode));
 	T->lChild->rChild->lChild->data = 6;
 	T->lChild->rChild->lChild->lChild = NULL;
 	T->lChild->rChild->lChild->rChild = NULL;
-	
-	T->rChild->lChild = NULL;
-	//T->rChild->lChild = malloc(sizeof(BiNode));
-	//T->rChild->lChild->data = 6;
-	//T->rChild->lChild->lChild = NULL;
-	//T->rChild->lChild->rChild = NULL;
-	T->rChild->rChild = NULL;
-	//T->rChild->rChild = malloc(sizeof(BiNode));
-	//T->rChild->rChild->data = 7;
-	//T->rChild->rChild->lChild = NULL;
-	//T->rChild->rChild->rChild = NULL; // 第三层右子树
+	*/
+	//T->rChild->lChild = NULL;
+	T->rChild->lChild = malloc(sizeof(BiNode));
+	T->rChild->lChild->data = 6;
+	T->rChild->lChild->lChild = NULL;
+	T->rChild->lChild->rChild = NULL;
+	//T->rChild->rChild = NULL;
+	T->rChild->rChild = malloc(sizeof(BiNode));
+	T->rChild->rChild->data = 7;
+	T->rChild->rChild->lChild = NULL;
+	T->rChild->rChild->rChild = NULL; // 第三层右子树
 }
 
 #if 0 // 递归算法
@@ -74,7 +79,7 @@ void PostOrderTraverse(BiNode* T) {
 	}
 }
 
-// 计算二叉树的深度
+// 计算二叉树的高度
 int Depth(BiNode* T) {
 	if (!T)
 		return 0;
@@ -141,8 +146,25 @@ void InOrderTravserse(BiNode* root) {
 				*top = node->rChild;
 				top++;
 			}
+			break;
 		}
 	}
+	
+	//while (stack != top||root) { // 栈非空
+	//	if (root)
+	//	{
+	//		*top = root;
+	//		top++; // 结点入栈
+	//		root = root->lChild; // 寻找是否有左孩子
+	//	}
+	//	else
+	//	{
+	//		root = *(top - 1);
+	//		top--; // 结点出栈
+	//		printf("%d ", root->data); // 打印结点值
+	//		root = root->rChild; // 寻找是否有右孩子
+	//	}
+	//}
 }
 
 // 后序遍历的迭代算法 左右根
@@ -180,9 +202,9 @@ void LevelOrder(BiNode* T) {
 	BiNode** front = queue; // 创建对头指针
 	BiNode** rear = front;  // 创建队尾指针
 
-	*rear = T;              
+	*rear = T;
 	rear++;                // 根节点入队
-	while (front!=rear) {  // 队列非空
+	while (front != rear) {  // 队列非空
 		BiNode* node = *front;
 		front++;
 		printf("%d ", node->data); // 打印非空结点值
@@ -199,42 +221,46 @@ void LevelOrder(BiNode* T) {
 	}
 }
 
-// 计算二叉树的深度
+// 计算二叉树的高度
 int Depth(BiNode* T) {
 	BiNode* queue[1000];    // 创建队列
 	BiNode** front = queue; // 创建对头指针
 	BiNode** rear = front;  // 创建队尾指针
+	int height = 0;
 
-	int length = 0;
-	bool index = true;
 	*rear = T;
-	rear++;                  // 根节点入队
-	while (front != rear) {  // 队列非空
-		BiNode* node = *front;
-		front++;
-		if (node->lChild) // 若存在左孩子则左孩子入队
-		{
-			*rear = node->lChild;
-			rear++;
-			if (index)
-			{
-				length++; // 存在左孩子长度加1
-				index = false;
-			}
+	rear++; // 根结点入队
+	int nodeCount = 1;
+	int i = 0;
+	while (front != rear) { // 队列非空
+		if (nodeCount == 0) {
+			break;
 		}
-		if (node->rChild) // 若存在右孩子则右孩子入队
+		height++;
+		while (nodeCount>0)
 		{
-			*rear = node->rChild;
-			rear++;
-			if (index)
+			BiNode* node = *front;
+			front++;
+			if (node->lChild) // 若存在左孩子则左孩子入队
 			{
-				length++;
-				index = false; // 防止重复计算同一层左右孩子高度
+				*rear = node->lChild;
+				rear++;
+				i++;
 			}
+			if (node->rChild) // 若存在右孩子则右孩子入队
+			{
+				*rear = node->rChild;
+				rear++;
+				i++;
+			}
+			nodeCount--;
 		}
-		index = true;
+		while (i) {
+			nodeCount++;
+			i--;
+		}
 	}
-	return length + 1;
+	return height;
 }
 
 // 求满二叉树（输入：完全二叉树的层序遍历 1，2，3，4，5 输出：二叉树）
