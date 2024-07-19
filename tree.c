@@ -121,19 +121,27 @@ void InOrderTravserse(BiNode* root) {
 	BiNode* stack[1000];  // 生成顺序栈
 	BiNode** top = stack; // 栈顶指针指向数组
 
-	while (stack != top||root) { // 栈非空
-		if (root)
+	*top = root;
+	top++; // 根结点入栈
+	while (stack!=top) // 栈非空
+	{
+		BiNode* node = *(top - 1);
+		if (node->lChild) // 左孩子入栈
 		{
-			*top = root;
-			top++; // 结点入栈
-			root = root->lChild; // 寻找是否有左孩子
+			*top = node->lChild;
+			top++;
 		}
 		else
 		{
-			root = *(top - 1);
-			top--; // 结点出栈
-			printf("%d ", root->data); // 打印结点值
-			root = root->rChild; // 寻找是否有右孩子
+			top--; // 取出栈顶元素
+			printf("%d ", node->data); // 打印结点值
+			
+			if (node->rChild)          // 右孩子入栈
+			{
+				*top = node->rChild;
+				top++;
+			}
+			break;
 		}
 	}
 }
