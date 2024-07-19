@@ -141,7 +141,6 @@ void InOrderTravserse(BiNode* root) {
 				*top = node->rChild;
 				top++;
 			}
-			break;
 		}
 	}
 }
