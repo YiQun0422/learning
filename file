@@ -41,7 +41,7 @@ void load()
 
  // 按折扣排序
 
- // 输出最大折扣并保存到文件
+ // 将结构体数组保存到文件
 void save()
 {
 	FILE* fp = fopen("result.txt", "wb");
