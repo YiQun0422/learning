@@ -40,6 +40,10 @@ void load()
 }
 
  // 按折扣排序
+int compare(const void* a, const void* b)
+{
+	return ((struct shopping*)a)->piece - ((struct shopping*)b)->piece;
+}
 
  // 将结构体数组保存到文件
 void save()
@@ -79,6 +83,9 @@ void lalala()
 int main()
 {
 	load();
+
+	qsort(shop, SIZE, sizeof(struct shopping), compare);
+
 	save();
 	lalala();
 
